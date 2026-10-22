@@ -4,6 +4,7 @@ from sqlalchemy import text
 from backend.config import Config
 from backend.extensions import db
 from backend.models import Participant, CheckIn
+from backend.services.recommendation_service import generate_recommendations
 
 
 def create_app():
@@ -79,7 +80,22 @@ def create_app():
                 .all()
             )
 
-        return render_template("dashboard.html", entries=entries)
+        recommendations = []
+
+        if entries:
+            latest = entries[-1]
+
+            recommendations = generate_recommendations(
+                mood_rating=latest.mood_rating,
+                stress_rating=latest.stress_rating,
+                sleep_hours=latest.sleep_hours,
+            )
+
+        return render_template(
+            "dashboard.html",
+            entries=entries,
+            recommendations=recommendations,
+        )
 
     @app.get("/health")
     def health():
@@ -93,6 +109,10 @@ def create_app():
         except Exception:
             app.logger.exception("Database health check failed")
             return {"database": "unavailable"}, 503
+        
+    @app.get("/support")
+    def support():
+        return render_template("support.html")
 
     return app
 

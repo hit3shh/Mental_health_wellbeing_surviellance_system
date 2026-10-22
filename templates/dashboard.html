@@ -1,67 +1,326 @@
 
 {% extends "base.html" %}
-{% block title %}My Dashboard{% endblock %}
+
+{% block title %}My Dashboard | MindWell{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
 {% block content %}
-<h1 class="h2 mb-2">Your check-in dashboard</h1>
-<p class="text-secondary">A personal reflection of your recorded ratings, not a diagnosis.</p>
 
-{% if entries %}
-  <div class="row g-3 mb-4">
-    <div class="col-md-4"><div class="card p-3"><div class="text-secondary">Check-ins</div><div class="display-6">{{ entries|length }}</div></div></div>
-    <div class="col-md-4"><div class="card p-3"><div class="text-secondary">Latest mood</div><div class="display-6">{{ entries[-1].mood_rating }}/5</div></div></div>
-    <div class="col-md-4"><div class="card p-3"><div class="text-secondary">Latest stress</div><div class="display-6">{{ entries[-1].stress_rating }}/5</div></div></div>
-  </div>
+<div class="container py-3">
 
-  <div class="card p-3 mb-4">
-    <h2 class="h5">Ratings over time</h2>
-    <canvas id="progressChart" height="110"></canvas>
-  </div>
-
-  <div class="card p-3">
-    <h2 class="h5">Recent check-ins</h2>
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <thead><tr><th>Date</th><th>Mood</th><th>Stress</th><th>Sleep</th></tr></thead>
-        <tbody>
-          {% for item in entries|reverse %}
-          <tr>
-            <td>{{ item.created_at.strftime('%d %b %Y, %H:%M') }}</td>
-            <td>{{ item.mood_rating }}/5</td>
-            <td>{{ item.stress_rating }}/5</td>
-            <td>{{ item.sleep_hours if item.sleep_hours is not none else 'Not recorded' }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <!-- Dashboard Header -->
+    <div class="mb-4">
+        <h1 class="fw-bold">My Well-Being Dashboard 💚</h1>
+        <p class="text-muted">
+            Review your check-ins, notice your patterns, and explore
+            general suggestions for your well-being.
+        </p>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    const labels = {{ entries|map(attribute='created_at')|map('string')|list|tojson }};
-    const mood = {{ entries|map(attribute='mood_rating')|list|tojson }};
-    const stress = {{ entries|map(attribute='stress_rating')|list|tojson }};
+    {% if entries %}
+        {% set latest = entries[-1] %}
 
-    new Chart(document.getElementById('progressChart'), {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [
-          { label: 'Mood (1–5)', data: mood, tension: 0.25 },
-          { label: 'Stress (1–5)', data: stress, tension: 0.25 }
-        ]
-      },
-      options: {
-        responsive: true,
-        scales: { y: { min: 1, max: 5, ticks: { stepSize: 1 } } }
-      }
-    });
-  </script>
-{% else %}
-  <div class="card p-4 text-center">
-    <h2 class="h4">No check-ins yet</h2>
-    <p>Complete your first check-in to see your history here.</p>
-    <a class="btn btn-primary" href="{{ url_for('checkin') }}">Start a check-in</a>
-  </div>
+        <!-- Summary Cards -->
+        <div class="row g-3 mb-4">
+
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body">
+                        <p class="text-muted mb-2">Total Check-ins</p>
+                        <h2 class="fw-bold">{{ entries|length }}</h2>
+                        <small class="text-muted">
+                            Your recorded check-in entries
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body">
+                        <p class="text-muted mb-2">Latest Mood Rating</p>
+                        <h2 class="fw-bold">{{ latest.mood_rating }}/5</h2>
+                        <small class="text-muted">
+                            1 = low, 5 = high
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body">
+                        <p class="text-muted mb-2">Latest Stress Rating</p>
+                        <h2 class="fw-bold">{{ latest.stress_rating }}/5</h2>
+                        <small class="text-muted">
+                            1 = low, 5 = high
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Well-Being Recommendations -->
+        <div class="card shadow-sm mb-4 border-0">
+            <div class="card-body p-4">
+
+                <h2 class="h4 fw-bold mb-3">
+                    Your Well-Being Suggestions 🌱
+                </h2>
+
+                {% if recommendations %}
+                    <ul class="mb-0">
+                        {% for recommendation in recommendations %}
+                            <li class="mb-2">{{ recommendation }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted mb-0">
+                        No suggestions are available yet.
+                        Complete a check-in to see general
+                        well-being suggestions.
+                    </p>
+                {% endif %}
+
+                <div class="alert alert-info mt-3 mb-0">
+                    <small>
+                        These suggestions are based on your
+                        self-reported check-in. They are not a
+                        diagnosis, clinical assessment, or substitute
+                        for professional care.
+                    </small>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mood and Stress Chart -->
+        <div class="card shadow-sm mb-4 border-0">
+            <div class="card-body p-4">
+
+                <h2 class="h4 fw-bold mb-2">
+                    Mood and Stress Trends 📊
+                </h2>
+
+                <p class="text-muted small">
+                    Compare your ratings across recorded check-ins.
+                    These scores are not a clinical assessment.
+                </p>
+
+                <div style="position: relative; height: 320px; width: 100%;">
+                    <canvas
+                        id="wellbeingChart"
+                        role="img"
+                        aria-label="Line chart showing mood and stress ratings across check-ins">
+                    </canvas>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Check-in History -->
+        <div class="card shadow-sm mb-4 border-0">
+            <div class="card-body p-4">
+
+                <div class="d-flex flex-wrap justify-content-between
+                            align-items-center gap-2 mb-3">
+                    <h2 class="h4 fw-bold mb-0">Check-in History</h2>
+
+                    <a href="{{ url_for('checkin') }}"
+                       class="btn btn-primary">
+                        + New Check-in
+                    </a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Date and Time</th>
+                                <th scope="col">Mood</th>
+                                <th scope="col">Stress</th>
+                                <th scope="col">Sleep (hours)</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for entry in entries|reverse %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+
+                                    <td>
+                                        {{ entry.created_at.strftime('%d %b %Y, %I:%M %p') }}
+                                    </td>
+
+                                    <td>{{ entry.mood_rating }}/5</td>
+
+                                    <td>{{ entry.stress_rating }}/5</td>
+
+                                    <td>
+                                        {% if entry.sleep_hours is not none %}
+                                            {{ entry.sleep_hours }}
+                                        {% else %}
+                                            <span class="text-muted">
+                                                Not provided
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    {% else %}
+
+        <!-- Empty Dashboard -->
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body py-5">
+
+                <div class="display-4 mb-3">🌱</div>
+
+                <h2 class="h4 fw-bold">
+                    Start Your Well-Being Journey
+                </h2>
+
+                <p class="text-muted mx-auto"
+                   style="max-width: 500px;">
+                    You haven't recorded any check-ins yet.
+                    Complete your first check-in to view your ratings,
+                    suggestions, and progress chart here.
+                </p>
+
+                <a href="{{ url_for('checkin') }}"
+                   class="btn btn-primary mt-2">
+                    Complete Your First Check-in
+                </a>
+
+            </div>
+        </div>
+
+    {% endif %}
+
+    <!-- Support Resources Link -->
+    <div class="text-center mt-4 mb-3">
+        <p class="text-muted">
+            Need some support?
+            <a href="{{ url_for('support') }}">
+                Explore Support Resources
+            </a>
+        </p>
+    </div>
+
+</div>
+
+<!-- Chart.js -->
+{% if entries %}
+<script>
+    const checkinLabels = {{ entries
+        | map(attribute='created_at')
+        | map('string')
+        | list
+        | tojson
+    }};
+
+    const moodRatings = {{ entries
+        | map(attribute='mood_rating')
+        | list
+        | tojson
+    }};
+
+    const stressRatings = {{ entries
+        | map(attribute='stress_rating')
+        | list
+        | tojson
+    }};
+
+    const chartCanvas = document.getElementById('wellbeingChart');
+
+    if (chartCanvas) {
+        new Chart(chartCanvas, {
+            type: 'line',
+
+            data: {
+                labels: checkinLabels,
+
+                datasets: [
+                    {
+                        label: 'Mood Rating',
+                        data: moodRatings,
+                        borderColor: '#198754',
+                        backgroundColor: 'rgba(25, 135, 84, 0.12)',
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: false
+                    },
+                    {
+                        label: 'Stress Rating',
+                        data: stressRatings,
+                        borderColor: '#dc3545',
+                        backgroundColor: 'rgba(220, 53, 69, 0.12)',
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: false
+                    }
+                ]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+
+                scales: {
+                    y: {
+                        min: 1,
+                        max: 5,
+                        ticks: {
+                            stepSize: 1
+                        },
+                        title: {
+                            display: true,
+                            text: 'Rating (1–5)'
+                        }
+                    },
+
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Check-in Date'
+                        }
+                    }
+                },
+
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            }
+        });
+    }
+</script>
 {% endif %}
+
 {% endblock %}
