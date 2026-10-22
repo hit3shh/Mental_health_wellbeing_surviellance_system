@@ -1,0 +1,33 @@
+﻿column,data_type,description,response_codes,verification_status,missing_count,unique_values
+WP5,int64,Pending verification against the appropriate codebook section,Not decoded; do not recode yet,Pending verification,0,55
+countrynew,str,Country name,Categorical country label; confirm source documentation,Documented in uploaded questionnaire/codebook; verify dataset version,0,55
+wgt,float64,Survey weight,Weight variable; consult methodology before weighted analysis,Documented in uploaded questionnaire/codebook; verify dataset version,0,32584
+EMP_2010,int64,Employment status category,See Gallup codebook employment section,Documented in uploaded questionnaire/codebook; verify dataset version,0,6
+EMP_FTEMP,float64,Pending verification against the appropriate codebook section,Not decoded; do not recode yet,Pending verification,21286,2
+EMP_LFPR,int64,Pending verification against the appropriate codebook section,Not decoded; do not recode yet,Pending verification,0,2
+EMP_WORK_HOURS,float64,Pending verification against the appropriate codebook section,Not decoded; do not recode yet,Pending verification,25710,6
+INCOME_5,int64,Per-capita income quintile,See Gallup codebook income section,Documented in uploaded questionnaire/codebook; verify dataset version,0,5
+WP10200,int64,Pending verification against the appropriate codebook section,Not decoded; do not recode yet,Pending verification,0,4
+WP10202,float64,Pending verification against the appropriate codebook section,Not decoded; do not recode yet,Pending verification,12685,4
+WP12,int64,Pending verification against the appropriate codebook section,Not decoded; do not recode yet,Pending verification,0,25
+WP1220,int64,Respondent age,99=99 years or older; 100=Refused,Documented in uploaded questionnaire/codebook; verify dataset version,0,86
+WP1219,int64,Respondent gender,1=Male; 2=Female,Documented in uploaded questionnaire/codebook; verify dataset version,0,2
+WP1230RECODED,int64,Pending verification against the appropriate codebook section,Not decoded; do not recode yet,Pending verification,0,4
+WP1233RECODED,float64,Pending verification against the appropriate codebook section,Not decoded; do not recode yet,Pending verification,1000,8
+WP16056,int64,Access to the internet,1=Yes; 2=No; 3=Don't know; 4=Refused,Documented in uploaded questionnaire/codebook; verify dataset version,0,4
+WP2319,int64,Feelings about household income,1=Living comfortably; 2=Getting by; 3=Finding it difficult; 4=Finding it very difficult; 5=Don't know; 6=Refused,Documented in uploaded questionnaire/codebook; verify dataset version,0,6
+WP30,int64,Pending verification against the appropriate codebook section,Not decoded; do not recode yet,Pending verification,0,4
+WP3117,int64,Pending verification against the appropriate codebook section,Not decoded; do not recode yet,Pending verification,0,5
+WP40,int64,Pending verification against the appropriate codebook section,Not decoded; do not recode yet,Pending verification,0,4
+WP4657,float64,Whether respondent was born in this country,1=Born in country; 2=Born elsewhere; 3=Don't know; 4=Refused,Documented in uploaded questionnaire/codebook; verify dataset version,3000,4
+WP1325,int64,Pending verification against the appropriate codebook section,Not decoded; do not recode yet,Pending verification,0,4
+WP22827,int64,Trust in news media,1=A lot; 2=A little; 3=Not at all; 8=Don't know; 9=Refused,Documented in uploaded questionnaire/codebook; verify dataset version,0,5
+WP22086,int64,Trust in social media platforms,1=A lot; 2=A little; 3=Not at all; 8=Don't know; 9=Refused,Documented in uploaded questionnaire/codebook; verify dataset version,0,5
+WP22087,float64,Trust in national government,1=A lot; 2=A little; 3=Not at all; 8=Don't know; 9=Refused,Documented in uploaded questionnaire/codebook; verify dataset version,1000,5
+WP22088,int64,Trust in doctors and healthcare workers,1=A lot; 2=A little; 3=Not at all; 8=Don't know; 9=Refused,Documented in uploaded questionnaire/codebook; verify dataset version,0,5
+WP22089,int64,Trust in scientists,1=A lot; 2=A little; 3=Not at all; 8=Don't know; 9=Refused,Documented in uploaded questionnaire/codebook; verify dataset version,0,5
+WP22090,int64,Trust in religious organizations,1=A lot; 2=A little; 3=Not at all; 8=Don't know; 9=Refused,Documented in uploaded questionnaire/codebook; verify dataset version,0,5
+WP22091,int64,"Identification with local area, country, or world",1=Local area; 2=Country; 3=World; 8=Don't know; 9=Refused,Documented in uploaded questionnaire/codebook; verify dataset version,0,5
+WP22125,int64,Whether respondent has heard of climate change,1=Yes; 2=No; 8=Don't know; 9=Refused,Documented in uploaded questionnaire/codebook; verify dataset version,0,4
+WP22826,int64,Main source used most often to stay informed about current events,1=Social media; 2=Online news websites; 3=Radio/TV/newspapers; 4=None; 5=Don't know; 6=Refused,Documented in uploaded questionnaire/codebook; verify dataset version,0,6
+WP22828,int64,What comes to mind when hearing 'climate change',1=Seasonal weather changes; 2=Extreme weather/global temperature rise caused by human activity; 3=Neither/something else; 8=Don't know; 9=Refused,Documented in uploaded questionnaire/codebook; verify dataset version,0,5
