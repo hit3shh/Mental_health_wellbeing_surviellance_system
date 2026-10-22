@@ -1,0 +1,67 @@
+
+{% extends "base.html" %}
+{% block title %}My Dashboard{% endblock %}
+{% block content %}
+<h1 class="h2 mb-2">Your check-in dashboard</h1>
+<p class="text-secondary">A personal reflection of your recorded ratings, not a diagnosis.</p>
+
+{% if entries %}
+  <div class="row g-3 mb-4">
+    <div class="col-md-4"><div class="card p-3"><div class="text-secondary">Check-ins</div><div class="display-6">{{ entries|length }}</div></div></div>
+    <div class="col-md-4"><div class="card p-3"><div class="text-secondary">Latest mood</div><div class="display-6">{{ entries[-1].mood_rating }}/5</div></div></div>
+    <div class="col-md-4"><div class="card p-3"><div class="text-secondary">Latest stress</div><div class="display-6">{{ entries[-1].stress_rating }}/5</div></div></div>
+  </div>
+
+  <div class="card p-3 mb-4">
+    <h2 class="h5">Ratings over time</h2>
+    <canvas id="progressChart" height="110"></canvas>
+  </div>
+
+  <div class="card p-3">
+    <h2 class="h5">Recent check-ins</h2>
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead><tr><th>Date</th><th>Mood</th><th>Stress</th><th>Sleep</th></tr></thead>
+        <tbody>
+          {% for item in entries|reverse %}
+          <tr>
+            <td>{{ item.created_at.strftime('%d %b %Y, %H:%M') }}</td>
+            <td>{{ item.mood_rating }}/5</td>
+            <td>{{ item.stress_rating }}/5</td>
+            <td>{{ item.sleep_hours if item.sleep_hours is not none else 'Not recorded' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const labels = {{ entries|map(attribute='created_at')|map('string')|list|tojson }};
+    const mood = {{ entries|map(attribute='mood_rating')|list|tojson }};
+    const stress = {{ entries|map(attribute='stress_rating')|list|tojson }};
+
+    new Chart(document.getElementById('progressChart'), {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          { label: 'Mood (1–5)', data: mood, tension: 0.25 },
+          { label: 'Stress (1–5)', data: stress, tension: 0.25 }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: { y: { min: 1, max: 5, ticks: { stepSize: 1 } } }
+      }
+    });
+  </script>
+{% else %}
+  <div class="card p-4 text-center">
+    <h2 class="h4">No check-ins yet</h2>
+    <p>Complete your first check-in to see your history here.</p>
+    <a class="btn btn-primary" href="{{ url_for('checkin') }}">Start a check-in</a>
+  </div>
+{% endif %}
+{% endblock %}

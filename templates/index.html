@@ -1,0 +1,21 @@
+
+{% extends "base.html" %}
+{% block title %}Home | Well-Being Companion{% endblock %}
+{% block content %}
+<section class="hero p-4 p-md-5 rounded-4">
+  <p class="text-primary fw-semibold">YOUR SPACE TO CHECK IN</p>
+  <h1 class="display-5 fw-bold">Make a little time for yourself.</h1>
+  <p class="lead">Record how you're feeling, reflect on your day, and notice your own patterns over time.</p>
+  <a href="{{ url_for('checkin') }}" class="btn btn-primary btn-lg mt-2">Start a check-in</a>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary btn-lg mt-2">View dashboard</a>
+</section>
+
+<div class="row g-3 mt-3">
+  <div class="col-md-4"><div class="card h-100 p-3"><h2 class="h5">Mood</h2><p>Record a rating from 1 to 5.</p></div></div>
+  <div class="col-md-4"><div class="card h-100 p-3"><h2 class="h5">Stress</h2><p>Reflect on how stressful today felt.</p></div></div>
+  <div class="col-md-4"><div class="card h-100 p-3"><h2 class="h5">Progress</h2><p>Review the check-ins saved in this browser session.</p></div></div>
+</div>
+<div class="alert alert-warning mt-4">
+  This is a software demonstration, not a validated mental-health assessment. Use fictional data only.
+</div>
+{% endblock %}

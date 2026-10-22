@@ -1,0 +1,49 @@
+
+{% extends "base.html" %}
+{% block title %}Check-In{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card p-4">
+      <h1 class="h2">How are you feeling today?</h1>
+      <p class="text-secondary">These are voluntary reflection questions, not a clinical test.</p>
+
+      <form method="post">
+        <label class="form-label mt-3" for="mood_rating">Mood rating</label>
+        <select class="form-select" id="mood_rating" name="mood_rating" required>
+          <option value="">Choose a rating</option>
+          <option value="1">1 — Very low</option>
+          <option value="2">2 — Low</option>
+          <option value="3">3 — Okay</option>
+          <option value="4">4 — Good</option>
+          <option value="5">5 — Very good</option>
+        </select>
+
+        <label class="form-label mt-3" for="stress_rating">Stress rating</label>
+        <select class="form-select" id="stress_rating" name="stress_rating" required>
+          <option value="">Choose a rating</option>
+          <option value="1">1 — Very little</option>
+          <option value="2">2 — A little</option>
+          <option value="3">3 — Moderate</option>
+          <option value="4">4 — High</option>
+          <option value="5">5 — Very high</option>
+        </select>
+
+        <label class="form-label mt-3" for="sleep_hours">Sleep last night (hours, optional)</label>
+        <input class="form-control" id="sleep_hours" name="sleep_hours"
+               type="number" min="0" max="24" step="0.5" placeholder="e.g. 8">
+
+        <div class="form-check mt-4">
+          <input class="form-check-input" type="checkbox" id="demo_ack"
+                 name="demo_ack" value="yes" required>
+          <label class="form-check-label" for="demo_ack">
+            I understand this is a fictional-data software demo, not a medical assessment.
+          </label>
+        </div>
+
+        <button class="btn btn-primary btn-lg mt-4" type="submit">Save check-in</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
